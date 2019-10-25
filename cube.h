@@ -23,11 +23,21 @@ void updateAngle(float i[3]){theta[0] = i[0]; theta[1] = i[1]; theta[2] = i[2];}
 GLuint get_quad_color_size(){return sizeof(quad_color);}
 GLuint get_points_size(){return sizeof(points);}
 
+void changeScale(int i);
+void increaseScale();
+void decreaseScale();
+
+void print();
+
+void increase(int i);
+void decrease(int i);
+
 private:
 
 vec4 product(vec4 a, vec4 b){
   return vec4(a[0]*b[0], a[1]*b[1], a[2]*b[2], a[3]*b[3]);
 }
+
 
 const static int NumVertices = 36;
 point4  vertices[8];
@@ -50,10 +60,14 @@ mat4 ctm;
 
 vec4 viewer;
 
- int scale = 0;
- int width = 315;//315
- int length = 5;//
- int height = 135;//
+ int scale;
+ int width;//315
+ int length;//
+ int height;//
+
+ int Twidth; 
+ int Tlength;//
+ int Theight;//
 
 // NOTE: SPECULAR LIGHTING to start!!
 bool spec;

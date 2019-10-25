@@ -26,6 +26,9 @@ spec=true;
  length = 5;//
  height = 135;//
 
+ int Twidth = 10;//
+ int Tlength = 10;//
+ int Theight = 10;//
 
 // tabe stats
 vertices[0]= point4(-width, -(height),  length, 1.0);
@@ -93,8 +96,7 @@ void cube::MyQuad(int a, int b, int c, int d){
   i%=NumVertices;
 }
 
-void cube::colorcube()
-{
+void cube::colorcube(){
   MyQuad(1,0,3,2);
   MyQuad(2,3,7,6);
   MyQuad(3,0,4,7);
@@ -103,7 +105,49 @@ void cube::colorcube()
   MyQuad(5,4,0,1);
 }
 
+void cube::changeScale(int i){
 
+vertices[0]= point4(-(width+scale), -(height+scale),  (length+scale), 1.0);
+vertices[1]= point4(-(width+scale),  (height+scale),  (length+scale), 1.0);
+vertices[2]= point4( (width+scale),  (height+scale),  (length+scale), 1.0);
+vertices[3]= point4( (width+scale), -(height+scale),  (length+scale), 1.0);
+vertices[4]= point4(-(width+scale), -(height+scale), -(length+scale), 1.0); 
+vertices[5]= point4(-(width+scale),  (height+scale), -(length+scale), 1.0);
+vertices[6]= point4( (width+scale),  (height+scale), -(length+scale), 1.0);   
+vertices[7]= point4( (width+scale), -(height+scale), -(length+scale), 1.0);
+
+
+}
+
+void cube::increaseScale(){changeScale(scale+=5);}
+void cube::decreaseScale(){changeScale(scale-=5);}
+
+void cube::increase(int i){
+  switch(i){
+      case 0:
+      Twidth += 5;
+  break;
+  case 1:
+  Tlength += 5;
+  break;
+  case 2:
+  Theight += 5;
+  break;
+  }
+}
+void cube::decrease(int i){
+  switch(i){
+      case 0:
+      Twidth -= 5;
+  break;
+  case 1:
+  Tlength -= 5;
+  break;
+  case 2:
+  Theight -= 5;
+  break;
+  }
+}
 
 void cube::draw(){
   ctm = RotateX(theta[0])*RotateY(theta[1])*RotateZ(theta[2]);

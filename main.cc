@@ -28,6 +28,8 @@ GLuint buffers[2];
 GLuint loc, loc2;
 GLint matrix_loc;
 
+bool rotate = false;
+
 cube* cc;
 
 GLuint program;
@@ -81,7 +83,9 @@ void spinCube()
 {
   static GLint time=glutGet(GLUT_ELAPSED_TIME);
   theta[axis] += incr*(glutGet(GLUT_ELAPSED_TIME)-time);
-  cc->updateAngle(theta);
+  if(rotate){
+    cc->updateAngle(theta);
+  }
   time = glutGet(GLUT_ELAPSED_TIME);
 
   if(theta[axis] > 360.0) theta[axis] -= 360.0;
@@ -90,9 +94,46 @@ void spinCube()
 
 extern "C" void mykey(unsigned char key, int mousex, int mousey)
 {
-  if(key=='q'||key=='Q') {
-    exit(0);
-  } 
+  switch (key)
+  {
+    case 'q':
+    case 'Q':
+        exit(0);
+      break;
+    case 'r':
+    rotate = !rotate;
+    break;
+    case '+':
+      cc->increaseScale();
+    break;
+    case '-':
+      cc->decreaseScale();
+    break;
+
+    case 'a':
+      cc->increase(0);
+    break;
+    case 's':
+          cc->increase(1);
+    break;
+    case 'd':
+          cc->increase(2);
+    break;
+
+    case 'z':
+    cc->decrease(0);
+    break;
+    case 'x':
+    cc->decrease(1);
+    break;
+    case 'c':
+    cc->decrease(2);
+    break;
+
+  default:
+    break;
+  }
+
 }
 
 int main(int argc, char** argv)
