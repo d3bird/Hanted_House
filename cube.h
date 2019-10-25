@@ -50,7 +50,10 @@ mat4 ctm;
 
 vec4 viewer;
 
-
+ int scale = 0;
+ int width = 315;//315
+ int length = 5;//
+ int height = 135;//
 
 // NOTE: SPECULAR LIGHTING to start!!
 bool spec;

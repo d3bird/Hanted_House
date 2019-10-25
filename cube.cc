@@ -21,19 +21,21 @@ cube::cube(){
 viewer = vec4(0.0, 0.0, -1.0, 0.0);
 spec=true;
 
-
-//top of the table
-vertices[0]= point4(-0.5, -0.1,  0.5, 1.0);
-vertices[1]= point4(-0.5,  0.1,  0.5, 1.0);
-vertices[2]= point4( 0.5,  0.1,  0.5, 1.0);
-vertices[3]= point4( 0.5, -0.1,  0.5, 1.0);
-vertices[4]= point4(-0.5, -0.1, -0.5, 1.0); 
-vertices[5]= point4(-0.5,  0.1, -0.5, 1.0);
-vertices[6]= point4( 0.5,  0.1, -0.5, 1.0);   
-vertices[7]= point4( 0.5, -0.1, -0.5, 1.0);
+ scale = 0;
+ width = 315;//315
+ length = 5;//
+ height = 135;//
 
 
-
+// tabe stats
+vertices[0]= point4(-width, -(height),  length, 1.0);
+vertices[1]= point4(-width,  (height),  length, 1.0);
+vertices[2]= point4( width,  (height),  length, 1.0);
+vertices[3]= point4( width, -(height),  length, 1.0);
+vertices[4]= point4(-width, -(height), -length, 1.0); 
+vertices[5]= point4(-width,  (height), -length, 1.0);
+vertices[6]= point4( width,  (height), -length, 1.0);   
+vertices[7]= point4( width, -(height), -length, 1.0);
 
 
 }

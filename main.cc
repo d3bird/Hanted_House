@@ -47,7 +47,7 @@ void init(){
   glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
   glBufferData(GL_ARRAY_BUFFER, cc->get_points_size() + cc->get_quad_color_size(), NULL, GL_STATIC_DRAW);
 
-  program = InitShader("vshader52.glsl", "fshader52.glsl");
+  program = InitShader("vshader.glsl", "fshader.glsl");
   glUseProgram(program);
 
   loc = glGetAttribLocation(program, "vPosition");
