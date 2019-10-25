@@ -6,10 +6,10 @@ typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
 
-class cube{
+class table{
 public:
 
-cube();
+table();
 
 void init();
 void draw();

@@ -1,10 +1,10 @@
-#include "cube.h"
+#include "table.h"
 
 
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
-cube::cube(){
+table::table(){
 
     theta[0] = 0.0;
     theta[1] = 0.0;
@@ -55,7 +55,7 @@ vertices2[7]= point4( Twidth, -(Theight), -Tlength, 1.0);
 
 
 
-void cube::MyQuad(int a, int b, int c, int d){
+void table::MyQuad(int a, int b, int c, int d){
   static int i =0; 
      
   // Compute normal vector.
@@ -108,7 +108,7 @@ void cube::MyQuad(int a, int b, int c, int d){
   
 }
 
-void cube::MyQuad2(int a, int b, int c, int d){
+void table::MyQuad2(int a, int b, int c, int d){
   static int i =0; 
      
   // Compute normal vector.
@@ -162,7 +162,7 @@ void cube::MyQuad2(int a, int b, int c, int d){
 }
 
 
-void cube::colorcube(){
+void table::colorcube(){
   MyQuad(1,0,3,2);
   MyQuad(2,3,7,6);
   MyQuad(3,0,4,7);
@@ -178,7 +178,7 @@ void cube::colorcube(){
   MyQuad2(5,4,0,1);
 }
 
-void cube::changeScale(int i){
+void table::changeScale(int i){
 
 //the table
 vertices[0]= point4(-(width+scale), -(height+scale),  (length+scale), 1.0);
@@ -201,10 +201,10 @@ vertices2[6]= point4( (Twidth+scale),  (Theight+scale), -(Tlength+scale), 1.0);
 vertices2[7]= point4( (Twidth+scale), -(Theight+scale), -(Tlength+scale), 1.0);
 }
 
-void cube::increaseScale(){changeScale(scale+=5);}
-void cube::decreaseScale(){changeScale(scale-=5);}
+void table::increaseScale(){changeScale(scale+=5);}
+void table::decreaseScale(){changeScale(scale-=5);}
 
-void cube::increase(int i){
+void table::increase(int i){
   switch(i){
   case 0:
     Twidth += 5;
@@ -218,7 +218,7 @@ void cube::increase(int i){
   }
 }
 
-void cube::decrease(int i){
+void table::decrease(int i){
   switch(i){
       case 0:
       Twidth -= 5;
@@ -232,7 +232,7 @@ void cube::decrease(int i){
   }
 }
 
-void cube::draw(){
+void table::draw(){
   ctm = RotateX(theta[0])*RotateY(theta[1])*RotateZ(theta[2]);
   colorcube();
 
@@ -246,7 +246,7 @@ void cube::draw(){
 
 }
 
-void cube::update(){
+void table::update(){
 
 
 }

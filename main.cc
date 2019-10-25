@@ -10,7 +10,8 @@
 // shades computed at vertices in application
 
 #include "Angel.h"
-#include "cube.h"
+#include "table.h"
+#include "chair.h"
 
 const int NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 
@@ -29,8 +30,9 @@ GLuint loc, loc2;
 GLint matrix_loc;
 
 bool rotate = false;
-
-cube* cc;
+bool Dtable = true;
+bool Dchair = false;
+table* cc;
 
 GLuint program;
 
@@ -67,8 +69,9 @@ void init(){
 extern "C" void display(){
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
+    if(Dtable){
     cc->draw();
-
+    }
   glutSwapBuffers();
 }
 
@@ -131,9 +134,51 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey)
     break;
 
   default:
+  // glutSetWindowTitle(key);
     break;
   }
 
+}
+
+extern "C" void menustatus(int status, int x, int y){
+axis = 2;
+  glutPostRedisplay();
+} 
+
+extern "C" void myMenu(int value)
+{
+  switch (value) {
+  case 0:
+      Dtable = true;
+      Dchair = false;
+    break;
+  case 1:
+      Dchair =true;
+      Dtable = false;
+    break;
+  case 3:
+
+    break;
+    case 4:
+
+    break;
+    case 5:
+
+    break;
+  default:
+    break;
+  }
+  glutPostRedisplay(); 
+}
+
+
+// Create menu items
+void setupMenu(){
+  glutCreateMenu(myMenu);
+  glutAddMenuEntry("draw table", 0);
+  glutAddMenuEntry("draw chair", 1);
+  //glutAddMenuEntry("level 3", 3);
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 int main(int argc, char** argv)
@@ -143,11 +188,15 @@ int main(int argc, char** argv)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(900, 900);
   glutCreateWindow("object viewer");
+
   glutDisplayFunc(display);
   glutMouseFunc(mouse);
   glutIdleFunc(spinCube);
   glutKeyboardFunc(mykey);
-  cc = new cube();
+  setupMenu();
+  glutMenuStatusFunc(menustatus);
+
+  cc = new table();
   glewInit();
 
   init();
