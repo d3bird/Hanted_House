@@ -17,7 +17,7 @@ void draw();
 void update();
 void colorcube();
 void MyQuad(int a, int b, int c, int d);
-
+void MyQuad2(int a, int b, int c, int d);
 void updateAngle(float i[3]){theta[0] = i[0]; theta[1] = i[1]; theta[2] = i[2];}
 
 GLuint get_quad_color_size(){return sizeof(quad_color);}
@@ -39,8 +39,9 @@ vec4 product(vec4 a, vec4 b){
 }
 
 
-const static int NumVertices = 36;
-point4  vertices[8];
+const static int NumVertices = 36;// was 36
+point4  vertices[8];// was 8
+point4  vertices2[8];// was 8
 
 color4 material_ambient;
 color4 material_diffuse;
@@ -55,6 +56,10 @@ float theta[3];
 
 point4 points[NumVertices];
 color4 quad_color[NumVertices];
+
+point4 points2[NumVertices];
+color4 quad_color2[NumVertices];
+
 mat4 ctm;
 
 
