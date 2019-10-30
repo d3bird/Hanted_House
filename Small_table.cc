@@ -58,13 +58,15 @@ Smtable::Smtable() {
 	vertices[14] = point4(Twidth, (Theight), -length, 1.0);
 	vertices[15] = point4(Twidth, -(Theight), -length, 1.0);
 
-	//tloc =  Translate(width,height,0);// the location of the table
+	tloc =  Translate(1,1,1);// the location of the table
 
 	BLleg = Translate(width, height, 0);
 	BRleg = Translate(-width, -height, 0);
 
 	FLleg = Translate(-width, height, 0);
 	RRleg = Translate(width, -height, 0);
+
+	calcMatrices();
 }
 
 void Smtable::moveleg(int i) {
@@ -171,47 +173,55 @@ void Smtable::MyQuad2(int a, int b, int c, int d) {
 	}
 
 	quad_color2[i] = ambient_color + diffuse_color + specular_color;
-	points2[i] = ctm * BLleg * vertices2[a];
-	points3[i] = ctm * BRleg * vertices2[a];
-	points4[i] = ctm * FLleg * vertices2[a];
-	points5[i] = ctm * RRleg * vertices2[a];
+	points2[i] = model_veiw_leg1 * vertices2[a];
+	points3[i] = model_veiw_leg2 * vertices2[a];
+	points4[i] = model_veiw_leg3 * vertices2[a];
+	points5[i] = model_veiw_leg4 * vertices2[a];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points2[i] = ctm * BLleg * vertices2[b];
-	points3[i] = ctm * BRleg * vertices2[b];
-	points4[i] = ctm * FLleg * vertices2[b];
-	points5[i] = ctm * RRleg * vertices2[b];
+	points2[i] = model_veiw_leg1 * vertices2[b];
+	points3[i] = model_veiw_leg2 * vertices2[b];
+	points4[i] = model_veiw_leg3 * vertices2[b];
+	points5[i] = model_veiw_leg4 * vertices2[b];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points2[i] = ctm * BLleg * vertices2[c];
-	points3[i] = ctm * BRleg * vertices2[c];
-	points4[i] = ctm * FLleg * vertices2[c];
-	points5[i] = ctm * RRleg * vertices2[c];
+	points2[i] = model_veiw_leg1 * vertices2[c];
+	points3[i] = model_veiw_leg2 * vertices2[c];
+	points4[i] = model_veiw_leg3 * vertices2[c];
+	points5[i] = model_veiw_leg4 * vertices2[c];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points2[i] = ctm * BLleg * vertices2[a];
-	points3[i] = ctm * BRleg * vertices2[a];
-	points4[i] = ctm * FLleg * vertices2[a];
-	points5[i] = ctm * RRleg * vertices2[a];
+	points2[i] = model_veiw_leg1 * vertices2[a];
+	points3[i] = model_veiw_leg2 * vertices2[a];
+	points4[i] = model_veiw_leg3 * vertices2[a];
+	points5[i] = model_veiw_leg4 * vertices2[a];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points2[i] = ctm * BLleg * vertices2[c];
-	points3[i] = ctm * BRleg * vertices2[c];
-	points4[i] = ctm * FLleg * vertices2[c];
-	points5[i] = ctm * RRleg * vertices2[c];
+	points2[i] = model_veiw_leg1 * vertices2[c];
+	points3[i] = model_veiw_leg2 * vertices2[c];
+	points4[i] = model_veiw_leg3 * vertices2[c];
+	points5[i] = model_veiw_leg4 * vertices2[c];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
 	//points2[i] = ctm*tloc*vertices2[d];
 	//points3[i] = ctm*tloc*vertices2[d];
-	points2[i] = ctm * BLleg * vertices2[d];
-	points3[i] = ctm * BRleg * vertices2[d];
-	points4[i] = ctm * FLleg * vertices2[d];
-	points5[i] = ctm * RRleg * vertices2[d];
+	points2[i] = model_veiw_leg1 * vertices2[d];
+	points3[i] = model_veiw_leg2 * vertices2[d];
+	points4[i] = model_veiw_leg3 * vertices2[d];
+	points5[i] = model_veiw_leg4 * vertices2[d];
 	i++;
 	i %= 36;
 
 }
 
+void Smtable::calcMatrices() {
+
+	model_veiw_leg1 = ctm * tloc * BLleg;
+	model_veiw_leg2 = ctm * tloc * BRleg;
+	model_veiw_leg3 = ctm * tloc * FLleg;
+	model_veiw_leg4 = ctm * tloc * RRleg;
+
+}
 
 void Smtable::colorcube() {
 	MyQuad(1, 0, 3, 2);
@@ -289,7 +299,7 @@ void Smtable::decrease(int i) {
 
 void Smtable::draw() {
 	ctm = RotateX(theta[0]) * RotateY(theta[1]) * RotateZ(theta[2]);//rotes the cube
-
+	calcMatrices();
 	colorcube();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);

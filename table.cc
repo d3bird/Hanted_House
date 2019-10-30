@@ -53,7 +53,8 @@ table::table() {
 	loc.x = 0;
 	loc.y = 0;
 	loc.z = 0;
-
+	tloc = Translate(loc.x, loc.y, loc.z);
+	calcMatrices();
 
 }
 
@@ -209,6 +210,13 @@ void table::changeScale(int i) {
 	vertices2[7] = point4((Twidth + scale), -(Theight + scale), -(Tlength + scale), 1.0);
 }
 
+void table::calcMatrices() {
+	mat4 tloc = ctm * tloc;
+	mat4 model_veiw_top = ctm * tloc;
+	mat4 mat4 model_veiw_leg = ctm * tloc;
+}
+
+
 void table::increaseScale(){changeScale(scale+=5);}
 void table::decreaseScale(){changeScale(scale-=5);}
 
@@ -242,6 +250,7 @@ void table::decrease(int i) {
 
 void table::draw() {
 	ctm = RotateX(theta[0]) * RotateY(theta[1]) * RotateZ(theta[2]);
+	calcMatrices();
 	colorcube();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);

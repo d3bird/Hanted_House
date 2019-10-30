@@ -32,6 +32,8 @@ public:
 	void increase(int i);
 	void decrease(int i);
 
+	void calcMatrices();
+
 private:
 
 	vec4 product(vec4 a, vec4 b) {
@@ -60,8 +62,6 @@ private:
 	point4 points2[NumVertices];
 	color4 quad_color2[NumVertices];
 
-	mat4 ctm;
-
 
 	vec4 viewer;
 
@@ -75,8 +75,12 @@ private:
 	int Theight;//
 
 	vec3 loc;
-
-
+	//rotation matrix
+	mat4 ctm;
+	//transition matxi
+	mat4 tloc;
+	mat4 model_veiw_top;
+	mat4 mat4 model_veiw_leg;
 	// NOTE: SPECULAR LIGHTING to start!!
 	bool spec;
 };

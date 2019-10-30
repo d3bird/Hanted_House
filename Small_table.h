@@ -35,6 +35,8 @@ public:
 
 	void moveleg(int i);
 
+	void calcMatrices();
+
 private:
 
 	vec4 product(vec4 a, vec4 b) {
