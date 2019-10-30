@@ -41,183 +41,182 @@ GLuint program;
 
 // OpenGL initialization
 
-void init(){
+void init() {
 
-  // Create a vertex array object
-  GLuint vao;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+	// Create a vertex array object
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 
-  // set up vertex buffer object
+	// set up vertex buffer object
 
-  glGenBuffers(1, buffers);
-  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-  glBufferData(GL_ARRAY_BUFFER, cc->get_points_size() + cc->get_quad_color_size() + cc->get_loc_size(), NULL, GL_STATIC_DRAW);
+	glGenBuffers(1, buffers);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	glBufferData(GL_ARRAY_BUFFER, cc->get_points_size() + cc->get_quad_color_size() + cc->get_loc_size(), NULL, GL_STATIC_DRAW);
 
-  program = InitShader("vshader.glsl", "fshader.glsl");
-  glUseProgram(program);
+	program = InitShader("vshader.glsl", "fshader.glsl");
+	glUseProgram(program);
 
-  loc = glGetAttribLocation(program, "vPosition");
-  glEnableVertexAttribArray(loc);
-  glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+	loc = glGetAttribLocation(program, "vPosition");
+	glEnableVertexAttribArray(loc);
+	glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
-  loc2 = glGetAttribLocation(program, "vColor");
-  glEnableVertexAttribArray(loc2);
-  glVertexAttribPointer(loc2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(cc->get_points_size()));
+	loc2 = glGetAttribLocation(program, "vColor");
+	glEnableVertexAttribArray(loc2);
+	glVertexAttribPointer(loc2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(cc->get_points_size()));
 
-  //uncomment this for the wire frame model
-  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	//uncomment this for the wire frame model
+	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-  glClearColor(1.0, 1.0, 1.0, 1.0); // white background
+	glClearColor(1.0, 1.0, 1.0, 1.0); // white background
 }
 
-extern "C" void display(){
+extern "C" void display() {
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
-    if(Dtable){
-      tt->draw();
-    }
-    if(Dchair){
-      cc->draw();
-    }
-    if(smallTable){
-      sm->draw();
-    }
-  glutSwapBuffers();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
+	if (Dtable) {
+		tt->draw();
+	}
+	if (Dchair) {
+		cc->draw();
+	}
+	if (smallTable) {
+		sm->draw();
+	}
+	glutSwapBuffers();
 }
 
-extern "C" void mouse(int btn, int state, int x, int y){
-  if(btn==GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
-  if(btn==GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
-  if(btn==GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
+extern "C" void mouse(int btn, int state, int x, int y) {
+	if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
+	if (btn == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
+	if (btn == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
 }
 
-void spinCube(){
-  static GLint time=glutGet(GLUT_ELAPSED_TIME);
-  theta[axis] += incr*(glutGet(GLUT_ELAPSED_TIME)-time);
-  if(rotate){
-    tt->updateAngle(theta);
-    cc->updateAngle(theta);
-    sm->updateAngle(theta);
-  }
-  time = glutGet(GLUT_ELAPSED_TIME);
+void spinCube() {
+	static GLint time = glutGet(GLUT_ELAPSED_TIME);
+	theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+	if (rotate) {
+		tt->updateAngle(theta);
+		cc->updateAngle(theta);
+		sm->updateAngle(theta);
+	}
+	time = glutGet(GLUT_ELAPSED_TIME);
 
-  if(theta[axis] > 360.0) theta[axis] -= 360.0;
-  glutPostRedisplay();
+	if (theta[axis] > 360.0) theta[axis] -= 360.0;
+	glutPostRedisplay();
 }
 
-extern "C" void mykey(unsigned char key, int mousex, int mousey){
-  switch (key)
-  {
-    case 'q':
-    case 'Q':
-        exit(0);
-      break;
-    case 'r':
-    rotate = !rotate;
-    break;
-    case '+':
-      cc->increaseScale();
-    break;
-    case '-':
-      cc->decreaseScale();
-    break;
+extern "C" void mykey(unsigned char key, int mousex, int mousey) {
+	switch (key)
+	{
+	case 'q':
+	case 'Q':
+		exit(0);
+		break;
+	case 'r':
+		rotate = !rotate;
+		break;
+	case '+':
+		cc->increaseScale();
+		break;
+	case '-':
+		cc->decreaseScale();
+		break;
 
-    case 'a':
-      cc->increase(0);
-    break;
-    case 's':
-          cc->increase(1);
-    break;
-    case 'd':
-          cc->increase(2);
-    break;
+	case 'a':
+		cc->increase(0);
+		break;
+	case 's':
+		cc->increase(1);
+		break;
+	case 'd':
+		cc->increase(2);
+		break;
 
-    case 'z':
-    cc->moveleg(0);
-    break;
-    case 'x':
-    cc->moveleg(1);
-    break;
-    case 'c':
-    cc->moveleg(2);
-    break;
+	case 'z':
+		cc->moveleg(0);
+		break;
+	case 'x':
+		cc->moveleg(1);
+		break;
+	case 'c':
+		cc->moveleg(2);
+		break;
 
-  default:
-  // glutSetWindowTitle(key);
-    break;
-  }
+	default:
+		// glutSetWindowTitle(key);
+		break;
+	}
 
 }
 
-extern "C" void menustatus(int status, int x, int y){
-axis = 2;
-  glutPostRedisplay();
-} 
+extern "C" void menustatus(int status, int x, int y) {
+	axis = 2;
+	glutPostRedisplay();
+}
 
 extern "C" void myMenu(int value)
 {
-  switch (value) {
-  case 0:
-      Dtable = true;
-      Dchair = false;
-      smallTable = false;
-    break;
-  case 1:
-      Dchair =true;
-      Dtable = false;
-      smallTable = false;
-    break;
-  case 3:
-      Dchair =false;
-      Dtable = false;
-      smallTable = true;
-    break;
-    case 4:
+	switch (value) {
+	case 0:
+		Dtable = true;
+		Dchair = false;
+		smallTable = false;
+		break;
+	case 1:
+		Dchair = true;
+		Dtable = false;
+		smallTable = false;
+		break;
+	case 3:
+		Dchair = false;
+		Dtable = false;
+		smallTable = true;
+		break;
+	case 4:
 
-    break;
-    case 5:
+		break;
+	case 5:
 
-    break;
-  default:
-    break;
-  }
-  glutPostRedisplay(); 
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
 
 // Create menu items
-void setupMenu(){
-  glutCreateMenu(myMenu);
-  glutAddMenuEntry("draw table", 0);
-  glutAddMenuEntry("draw chair", 1);
-  glutAddMenuEntry("draw small table", 3);
-  glutAttachMenu(GLUT_RIGHT_BUTTON);
+void setupMenu() {
+	glutCreateMenu(myMenu);
+	glutAddMenuEntry("draw table", 0);
+	glutAddMenuEntry("draw chair", 1);
+	glutAddMenuEntry("draw small table", 3);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv){
 
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(900, 900);
-  glutCreateWindow("object viewer");
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitWindowSize(900, 900);
+	glutCreateWindow("object viewer");
 
-  glutDisplayFunc(display);
-  glutMouseFunc(mouse);
-  glutIdleFunc(spinCube);
-  glutKeyboardFunc(mykey);
-  setupMenu();
-  glutMenuStatusFunc(menustatus);
+	glutDisplayFunc(display);
+	glutMouseFunc(mouse);
+	glutIdleFunc(spinCube);
+	glutKeyboardFunc(mykey);
+	setupMenu();
+	glutMenuStatusFunc(menustatus);
 
-  tt = new table();
-  cc = new chair();
-  sm = new Smtable();
-  glewInit();
+	tt = new table();
+	cc = new chair();
+	sm = new Smtable();
+	glewInit();
 
-  init();
+	init();
 
-  glEnable(GL_DEPTH_TEST);
-  glutMainLoop();
-  return(EXIT_SUCCESS);
+	glEnable(GL_DEPTH_TEST);
+	glutMainLoop();
+	return(EXIT_SUCCESS);
 }
