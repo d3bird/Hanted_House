@@ -12,6 +12,7 @@
 #include "Angel.h"
 #include "table.h"
 #include "chair.h"
+#include "Small_table.h"
 
 const int NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 
@@ -30,10 +31,12 @@ GLuint loc, loc2;
 GLint matrix_loc;
 
 bool rotate = false;
-bool Dtable = true;
-bool Dchair = false;
-table* cc;
-
+bool Dtable = false;
+bool Dchair = true;
+bool smallTable = false;
+table* tt;
+chair* cc;
+Smtable* sm;
 GLuint program;
 
 // OpenGL initialization
@@ -49,7 +52,7 @@ void init(){
 
   glGenBuffers(1, buffers);
   glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-  glBufferData(GL_ARRAY_BUFFER, cc->get_points_size() + cc->get_quad_color_size(), NULL, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, cc->get_points_size() + cc->get_quad_color_size() + cc->get_loc_size(), NULL, GL_STATIC_DRAW);
 
   program = InitShader("vshader.glsl", "fshader.glsl");
   glUseProgram(program);
@@ -57,9 +60,11 @@ void init(){
   loc = glGetAttribLocation(program, "vPosition");
   glEnableVertexAttribArray(loc);
   glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+
   loc2 = glGetAttribLocation(program, "vColor");
   glEnableVertexAttribArray(loc2);
   glVertexAttribPointer(loc2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(cc->get_points_size()));
+
   //uncomment this for the wire frame model
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
@@ -70,24 +75,30 @@ extern "C" void display(){
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
     if(Dtable){
-    cc->draw();
+      tt->draw();
+    }
+    if(Dchair){
+      cc->draw();
+    }
+    if(smallTable){
+      sm->draw();
     }
   glutSwapBuffers();
 }
 
-extern "C" void mouse(int btn, int state, int x, int y)
-{
+extern "C" void mouse(int btn, int state, int x, int y){
   if(btn==GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
   if(btn==GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
   if(btn==GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
 }
 
-void spinCube()
-{
+void spinCube(){
   static GLint time=glutGet(GLUT_ELAPSED_TIME);
   theta[axis] += incr*(glutGet(GLUT_ELAPSED_TIME)-time);
   if(rotate){
+    tt->updateAngle(theta);
     cc->updateAngle(theta);
+    sm->updateAngle(theta);
   }
   time = glutGet(GLUT_ELAPSED_TIME);
 
@@ -95,8 +106,7 @@ void spinCube()
   glutPostRedisplay();
 }
 
-extern "C" void mykey(unsigned char key, int mousex, int mousey)
-{
+extern "C" void mykey(unsigned char key, int mousex, int mousey){
   switch (key)
   {
     case 'q':
@@ -124,13 +134,13 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey)
     break;
 
     case 'z':
-    cc->decrease(0);
+    cc->moveleg(0);
     break;
     case 'x':
-    cc->decrease(1);
+    cc->moveleg(1);
     break;
     case 'c':
-    cc->decrease(2);
+    cc->moveleg(2);
     break;
 
   default:
@@ -151,13 +161,17 @@ extern "C" void myMenu(int value)
   case 0:
       Dtable = true;
       Dchair = false;
+      smallTable = false;
     break;
   case 1:
       Dchair =true;
       Dtable = false;
+      smallTable = false;
     break;
   case 3:
-
+      Dchair =false;
+      Dtable = false;
+      smallTable = true;
     break;
     case 4:
 
@@ -177,7 +191,7 @@ void setupMenu(){
   glutCreateMenu(myMenu);
   glutAddMenuEntry("draw table", 0);
   glutAddMenuEntry("draw chair", 1);
-  //glutAddMenuEntry("level 3", 3);
+  glutAddMenuEntry("draw small table", 3);
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -196,7 +210,9 @@ int main(int argc, char** argv)
   setupMenu();
   glutMenuStatusFunc(menustatus);
 
-  cc = new table();
+  tt = new table();
+  cc = new chair();
+  sm = new Smtable();
   glewInit();
 
   init();

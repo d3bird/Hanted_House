@@ -74,6 +74,9 @@ vec4 viewer;
  int Tlength;//
  int Theight;//
 
+  vec3 loc;
+
+
 // NOTE: SPECULAR LIGHTING to start!!
 bool spec;
 };

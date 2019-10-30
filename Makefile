@@ -28,14 +28,17 @@ include /home/cs425/code-egs/Makefile.defs
 # Next line says what options to use to compile programs
 OPTIONS+=-Wall
 
-animate: main.cc chair.o table.o
-	$(CC) main.cc  $(InitShader) chair.o table.o $(OPTIONS) $(LDLIBS) -o cerebrate
+animate: main.cc chair.o table.o Small_table.o
+	$(CC) main.cc  $(InitShader) chair.o table.o Small_table.o $(OPTIONS) $(LDLIBS) -o cerebrate
 
 chair.o: chair.h chair.cc
 	$(CC) chair.cc -c $(OPTIONS)
 	
 table.o: table.h table.cc
 	$(CC) table.cc -c $(OPTIONS)
+
+Small_table.o: Small_table.h Small_table.cc
+	$(CC) Small_table.cc -c $(OPTIONS)
 
 clean:
 	rm cerebrate
