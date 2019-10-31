@@ -91,6 +91,12 @@ private:
 
 	mat4 FLleg;
 	mat4 RRleg;
+
+	mat4 model_veiw_leg1;
+	mat4 model_veiw_leg2;
+	mat4 model_veiw_leg3;
+	mat4 model_veiw_leg4;
+
 	// NOTE: SPECULAR LIGHTING to start!!
 	bool spec;
 };

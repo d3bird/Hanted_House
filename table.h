@@ -80,7 +80,7 @@ private:
 	//transition matxi
 	mat4 tloc;
 	mat4 model_veiw_top;
-	mat4 mat4 model_veiw_leg;
+	mat4  model_veiw_leg;
 	// NOTE: SPECULAR LIGHTING to start!!
 	bool spec;
 };

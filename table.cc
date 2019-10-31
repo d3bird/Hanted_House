@@ -211,9 +211,9 @@ void table::changeScale(int i) {
 }
 
 void table::calcMatrices() {
-	mat4 tloc = ctm * tloc;
-	mat4 model_veiw_top = ctm * tloc;
-	mat4 mat4 model_veiw_leg = ctm * tloc;
+	 tloc = ctm * tloc;
+	 model_veiw_top = ctm * tloc;
+	  model_veiw_leg = ctm * tloc;
 }
 
 
