@@ -41,8 +41,11 @@ GLuint program;
 
 int x =0;
 int y =0;
-int z =0;
-
+int z =-1;
+int moveamount = 1;
+  point4 at(0.0, 0.0, 0.0, 1.0);
+ // vec4   up(0.0, 1.0, 0.0, 0.0);
+point4 eye(0, 0.0, -1, 1.0);
 // the information for the camer pois
 GLfloat camera_angle=45.0; // Camera's angle of view in degrees
 GLfloat zNear;             // Camera's near clipping plane
@@ -56,6 +59,32 @@ GLfloat bottom;
 GLuint  Modeltrans, Projection, Modelview; 
 mat4 model_view; //the transfermations per objects based off the position of the player
 // OpenGL initialization
+
+
+//custom cammra stuff
+vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);  
+
+vec3 cameraTarget = vec3(0.0f, 0.0f, 0.0f);
+vec3 cameraDirection = normalize(cameraPos - cameraTarget);
+
+vec3 up = vec3(0.0f, 1.0f, 0.0f); 
+vec3 cameraRight = normalize(cross(up, cameraDirection));
+
+vec3 cameraUp = cross(cameraDirection, cameraRight);
+
+mat4 view = LookAt(vec3(0.0f, 0.0f, 3.0f), 
+  		   vec3(0.0f, 0.0f, 0.0f), 
+  		   vec3(0.0f, 1.0f, 0.0f));
+
+//vec3 cameraPos   = vec3(0.0f, 0.0f,  3.0f);
+vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+//vec3 cameraUp    = vec3(0.0f, 1.0f,  0.0f);
+
+//booleans for movments
+bool mforward = false;
+bool mleft = false;
+bool mright = false;
+bool mbackward = false;
 
 void init() {
 
@@ -95,7 +124,6 @@ extern "C" void display() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
 	if (Dtable) {
-		tt-> ShaderModelVeiw(Modeltrans);
 		tt->draw();
 	}
 	if (Dchair) {
@@ -115,10 +143,8 @@ extern "C" void mouse(int btn, int state, int x, int y) {
 
 void spinCube() {
 
-  point4 at(0.0, 0.0, 0.0, 1.0);
-  vec4   up(0.0, 1.0, 0.0, 0.0);
-
 	static GLint time = glutGet(GLUT_ELAPSED_TIME);
+	GLint deltatime = (glutGet(GLUT_ELAPSED_TIME) - time);
 	theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
 	if (rotate) {
 		tt->updateAngle(theta);
@@ -129,14 +155,39 @@ void spinCube() {
 
 	if (theta[axis] > 360.0) theta[axis] -= 360.0;
 
-	point4 eye(0, 0.0, -1, 1.0);
-  model_view = LookAt(eye, at, up);
-  glUniformMatrix4fv(Modelview, 1, GL_TRUE, model_view);
+	point4 eye2(1000, 10000, -10, 1.0);
+	point4 at2(-0, -0,-0, 1.0);
+  //model_view = LookAt(eye2, at2, up);
+  //std::cout<<model_view<<std::endl;
+
+	// deal with movement
+	float cameraSpeed = 0.1f;
+	//std::cout<<cameraSpeed<<std::endl;
+	if(mforward){
+		cameraPos += cameraSpeed * cameraFront;
+		mforward = false;
+	}
+	if (mbackward){
+		cameraPos -= cameraSpeed * cameraFront;
+		mbackward= false;
+	}
+	if(mleft){
+		cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+		mleft= false;
+	}
+	if(mright){
+		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+	mright= false;
+	}
+
+  mat4 view = LookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+  glUniformMatrix4fv(Modelview, 1, GL_TRUE, ( view));
 
 	glutPostRedisplay();
 }
 
 extern "C" void mykey(unsigned char key, int mousex, int mousey) {
+	//float cameraSpeed = 2.5f;
 	switch (key)
 	{
 	case 'q':
@@ -147,24 +198,36 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 		rotate = !rotate;
 		break;
 	case '+':
-		cc->increaseScale();
+		//cc->increaseScale();
+		moveamount *=2;
+		std::cout<<"move AMOUNT "<< moveamount <<std::endl;
 		break;
 	case '-':
-		cc->decreaseScale();
+		moveamount /=2;
+		std::cout<<"move AMOUNT "<< moveamount <<std::endl;
+		//->decreaseScale();
 		break;
 
-	case 'a':
-		cc->increase(0);
+	case 'w':
+		mforward = true;
+		//cameraPos += cameraSpeed * cameraFront;
 		break;
 	case 's':
-		cc->increase(1);
-		break;
+	mbackward = true;
+		//cameraPos -= cameraSpeed * cameraFront;
+		break;		
+	case 'a':
+	mleft = true;
+			//cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+   		 break;
 	case 'd':
-		cc->increase(2);
+	mright = true;
+		//cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 		break;
 
+
 	case 'z':
-		cc->moveleg(0);
+		y = 1;
 		break;
 	case 'x':
 		cc->moveleg(1);
@@ -178,7 +241,7 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
     if (camera_angle > 175.0) {
       camera_angle = 175.0;
     }
-    mat4 projection =Ortho(left, right, bottom, top, zNear, zFar);;
+    mat4 projection =Ortho(left, right, bottom, top, zNear, zFar);
 
     glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
     glutPostRedisplay();
@@ -189,18 +252,19 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
     if (camera_angle < 1.0) {
       camera_angle = 1.0;
     }
-    mat4 projection1 = Ortho(left, right, bottom, top, zNear, zFar);;
-    glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
+
+
+
+
+    //mat4 projection1 = Ortho(left, right, bottom, top, zNear, zFar);;
+    //glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
     glutPostRedisplay();
   }
-	case 'w':
-
-	break;
 	default:
 		// glutSetWindowTitle(key);
 		break;
 	}
-	///	mat4 projection1 = Perspective(camera_angle, aspect, zNear, zFar);
+	//	mat4 projection1 = Perspective(camera_angle, aspect, zNear, zFar);
 	//	glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
 	//	glutPostRedisplay();
 }
@@ -210,8 +274,7 @@ extern "C" void menustatus(int status, int x, int y) {
 	glutPostRedisplay();
 }
 
-extern "C" void myMenu(int value)
-{
+extern "C" void myMenu(int value){
 	switch (value) {
 	case 0:
 		Dtable = true;
@@ -240,8 +303,7 @@ extern "C" void myMenu(int value)
 	glutPostRedisplay();
 }
 
-extern "C" void reshape(int width, int height)
-{
+extern "C" void reshape(int width, int height){
   glViewport(0, 0, width, height);
 
   GLfloat left = -2.0, right = 2.0;
@@ -265,10 +327,10 @@ extern "C" void reshape(int width, int height)
     bottom /= aspect;
   }
 
-  //mat4 projection = Perspective(camera_angle, aspect, zNear, zFar);
+mat4 projection = Perspective(camera_angle, aspect, zNear, zFar);
 
   // Can use either perspective or ortho projection.
-    mat4 projection = Ortho(left, right, bottom, top, zNear, zFar);
+   // mat4 projection = Ortho(left, right, bottom, top, zNear, zFar);
   glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
 }
 // Create menu items
@@ -278,6 +340,14 @@ void setupMenu() {
 	glutAddMenuEntry("draw chair", 1);
 	glutAddMenuEntry("draw small table", 3);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void myinit(){
+	tt = new table();
+	tt-> ShaderModelVeiw(Modeltrans);
+	cc = new chair();
+	sm = new Smtable();
+
 }
 
 int main(int argc, char** argv){
@@ -295,13 +365,10 @@ int main(int argc, char** argv){
 	setupMenu();
 	glutMenuStatusFunc(menustatus);
 
-	tt = new table();
-	cc = new chair();
-	sm = new Smtable();
 	glewInit();
 
 	init();
-
+	myinit();
 	glEnable(GL_DEPTH_TEST);
 	glutMainLoop();
 	return(EXIT_SUCCESS);
