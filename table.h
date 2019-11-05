@@ -33,7 +33,9 @@ public:
 	void decrease(int i);
 
 	void calcMatrices();
-
+	void ShaderModelVeiw(GLuint  m){ModelView =m;}
+	void updateModelVeiwTop();
+	void updateModelVeiwLeg();
 private:
 
 	vec4 product(vec4 a, vec4 b) {
@@ -62,10 +64,13 @@ private:
 	point4 points2[NumVertices];
 	color4 quad_color2[NumVertices];
 
+	point4 Dpoints[NumVertices];
+
+	point4 Dpoints2[NumVertices];
 
 	vec4 viewer;
-
-	int scale;
+	GLuint  ModelView;
+	int tscale;
 	int width;//315
 	int length;//
 	int height;//
@@ -73,14 +78,17 @@ private:
 	int Twidth;
 	int Tlength;//
 	int Theight;//
-
+	
 	vec3 loc;
 	//rotation matrix
 	mat4 ctm;
 	//transition matxi
 	mat4 tloc;
 	mat4 model_veiw_top;
-	mat4  model_veiw_leg;
+	mat4 model_veiw_leg;
+	//const GLfloat sscale = (1.0/1000.0);
+	//const GLfloat none = 1;
+	//mat4 scale = Scale(sscale, sscale, sscale, none);
 	// NOTE: SPECULAR LIGHTING to start!!
 	bool spec;
 };

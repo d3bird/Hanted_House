@@ -21,7 +21,7 @@ table::table() {
 	viewer = vec4(0.0, 0.0, -1.0, 0.0);
 	spec = true;
 
-	scale = 0;
+	tscale = 0;
 	width = 315;//135
 	length = 5;//
 	height = 135;//
@@ -190,24 +190,24 @@ void table::colorcube(){
 void table::changeScale(int i) {
 
 	//the table
-	vertices[0] = point4(-(width + scale), -(height + scale), (length + scale), 1.0);
-	vertices[1] = point4(-(width + scale), (height + scale), (length + scale), 1.0);
-	vertices[2] = point4((width + scale), (height + scale), (length + scale), 1.0);
-	vertices[3] = point4((width + scale), -(height + scale), (length + scale), 1.0);
-	vertices[4] = point4(-(width + scale), -(height + scale), -(length + scale), 1.0);
-	vertices[5] = point4(-(width + scale), (height + scale), -(length + scale), 1.0);
-	vertices[6] = point4((width + scale), (height + scale), -(length + scale), 1.0);
-	vertices[7] = point4((width + scale), -(height + scale), -(length + scale), 1.0);
+	vertices[0] = point4(-(width + tscale), -(height + tscale), (length + tscale), 1.0);
+	vertices[1] = point4(-(width + tscale), (height + tscale), (length + tscale), 1.0);
+	vertices[2] = point4((width + tscale), (height + tscale), (length + tscale), 1.0);
+	vertices[3] = point4((width + tscale), -(height + tscale), (length + tscale), 1.0);
+	vertices[4] = point4(-(width + tscale), -(height + tscale), -(length + tscale), 1.0);
+	vertices[5] = point4(-(width + tscale), (height + tscale), -(length + tscale), 1.0);
+	vertices[6] = point4((width + tscale), (height + tscale), -(length + tscale), 1.0);
+	vertices[7] = point4((width + tscale), -(height + tscale), -(length + tscale), 1.0);
 
 	//the base of the table
-	vertices2[0] = point4(-(Twidth + scale), -(Theight + scale), (Tlength + scale), 1.0);
-	vertices2[1] = point4(-(Twidth + scale), (Theight + scale), (Tlength + scale), 1.0);
-	vertices2[2] = point4((Twidth + scale), (Theight + scale), (Tlength + scale), 1.0);
-	vertices2[3] = point4((Twidth + scale), -(Theight + scale), (Tlength + scale), 1.0);
-	vertices2[4] = point4(-(Twidth + scale), -(Theight + scale), -(Tlength + scale), 1.0);
-	vertices2[5] = point4(-(Twidth + scale), (Theight + scale), -(Tlength + scale), 1.0);
-	vertices2[6] = point4((Twidth + scale), (Theight + scale), -(Tlength + scale), 1.0);
-	vertices2[7] = point4((Twidth + scale), -(Theight + scale), -(Tlength + scale), 1.0);
+	vertices2[0] = point4(-(Twidth + tscale), -(Theight + tscale), (Tlength + tscale), 1.0);
+	vertices2[1] = point4(-(Twidth + tscale), (Theight + tscale), (Tlength + tscale), 1.0);
+	vertices2[2] = point4((Twidth + tscale), (Theight + tscale), (Tlength + tscale), 1.0);
+	vertices2[3] = point4((Twidth + tscale), -(Theight + tscale), (Tlength + tscale), 1.0);
+	vertices2[4] = point4(-(Twidth + tscale), -(Theight + tscale), -(Tlength + tscale), 1.0);
+	vertices2[5] = point4(-(Twidth + tscale), (Theight + tscale), -(Tlength + tscale), 1.0);
+	vertices2[6] = point4((Twidth + tscale), (Theight + tscale), -(Tlength + tscale), 1.0);
+	vertices2[7] = point4((Twidth + tscale), -(Theight + tscale), -(Tlength + tscale), 1.0);
 }
 
 void table::calcMatrices() {
@@ -217,8 +217,8 @@ void table::calcMatrices() {
 }
 
 
-void table::increaseScale(){changeScale(scale+=5);}
-void table::decreaseScale(){changeScale(scale-=5);}
+void table::increaseScale(){changeScale(tscale+=5);}
+void table::decreaseScale(){changeScale(tscale-=5);}
 
 void table::increase(int i) {
 	switch (i) {
@@ -248,18 +248,41 @@ void table::decrease(int i) {
 	}
 }
 
+void table::updateModelVeiwTop(){
+
+glUniformMatrix4fv(ModelView, 1, GL_TRUE, model_veiw_top);
+
+}
+void table::updateModelVeiwLeg(){
+
+glUniformMatrix4fv(ModelView, 1, GL_TRUE, model_veiw_leg);
+
+}
 void table::draw() {
 	ctm = RotateX(theta[0]) * RotateY(theta[1]) * RotateZ(theta[2]);
 	calcMatrices();
 	colorcube();
-
+	// Dpoints = points;// get the 
+	// Dpoints2 =points2;
+	/*for(int i =0; i < NumVertices;i++){
+	 Dpoints[i].x = Dpoints[i].x *(1.0/1000.0);
+	Dpoints[i].y = Dpoints[i].y *(1.0/1000.0);
+	Dpoints[i].z = Dpoints[i].z *(1.0/1000.0);
+	 Dpoints[i].w  =0;
+	Dpoints2[i].x = Dpoints2[i].x *(1.0/1000.0);
+	Dpoints2[i].y = Dpoints2[i].y *(1.0/1000.0);
+	Dpoints2[i].z = Dpoints2[i].z *(1.0/1000.0);
+	Dpoints2[i].w  =0;
+	}*/
+	glUniformMatrix4fv(ModelView, 1, GL_TRUE, model_veiw_top);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(quad_color), quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); // the top of the table
+
+	glUniformMatrix4fv(ModelView, 1, GL_TRUE, model_veiw_leg);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points2);
-	//glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(quad_color), quad_color2);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices); // the top of the table
-	//glDrawArrays(GL_TRIANGLES, 36, NumVertices); // the base of the table
+	glDrawArrays(GL_TRIANGLES, 0, NumVertices); // the leg of the table
+
 
 }
 

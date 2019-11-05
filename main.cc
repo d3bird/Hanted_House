@@ -30,15 +30,31 @@ GLuint buffers[2];
 GLuint loc, loc2;
 GLint matrix_loc;
 
-bool rotate = false;
-bool Dtable = false;
-bool Dchair = true;
+bool rotate = true;
+bool Dtable = true;
+bool Dchair = false;
 bool smallTable = false;
 table* tt;
 chair* cc;
 Smtable* sm;
 GLuint program;
 
+int x =0;
+int y =0;
+int z =0;
+
+// the information for the camer pois
+GLfloat camera_angle=45.0; // Camera's angle of view in degrees
+GLfloat zNear;             // Camera's near clipping plane
+GLfloat zFar;              // Camera's far clipping plane
+GLfloat aspect;            // Window's aspect ratio (updated in reshape)
+GLfloat left;
+GLfloat right;
+GLfloat top;
+GLfloat bottom;
+// Model-view and projection matrices uniform location
+GLuint  Modeltrans, Projection, Modelview; 
+mat4 model_view; //the transfermations per objects based off the position of the player
 // OpenGL initialization
 
 void init() {
@@ -65,6 +81,10 @@ void init() {
 	glEnableVertexAttribArray(loc2);
 	glVertexAttribPointer(loc2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(cc->get_points_size()));
 
+	Modelview = glGetUniformLocation(program, "model_view");
+	Modeltrans = glGetUniformLocation(program, "model_trans");
+  	Projection = glGetUniformLocation(program, "Projection");
+
 	//uncomment this for the wire frame model
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
@@ -75,6 +95,7 @@ extern "C" void display() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
 	if (Dtable) {
+		tt-> ShaderModelVeiw(Modeltrans);
 		tt->draw();
 	}
 	if (Dchair) {
@@ -93,6 +114,10 @@ extern "C" void mouse(int btn, int state, int x, int y) {
 }
 
 void spinCube() {
+
+  point4 at(0.0, 0.0, 0.0, 1.0);
+  vec4   up(0.0, 1.0, 0.0, 0.0);
+
 	static GLint time = glutGet(GLUT_ELAPSED_TIME);
 	theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
 	if (rotate) {
@@ -103,6 +128,11 @@ void spinCube() {
 	time = glutGet(GLUT_ELAPSED_TIME);
 
 	if (theta[axis] > 360.0) theta[axis] -= 360.0;
+
+	point4 eye(0, 0.0, -1, 1.0);
+  model_view = LookAt(eye, at, up);
+  glUniformMatrix4fv(Modelview, 1, GL_TRUE, model_view);
+
 	glutPostRedisplay();
 }
 
@@ -143,11 +173,36 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 		cc->moveleg(2);
 		break;
 
+ case '>': {
+    camera_angle += 5.0;
+    if (camera_angle > 175.0) {
+      camera_angle = 175.0;
+    }
+    mat4 projection =Ortho(left, right, bottom, top, zNear, zFar);;
+
+    glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
+    glutPostRedisplay();
+  }
+    break;
+  case '<':{
+    camera_angle -= 5.0;
+    if (camera_angle < 1.0) {
+      camera_angle = 1.0;
+    }
+    mat4 projection1 = Ortho(left, right, bottom, top, zNear, zFar);;
+    glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
+    glutPostRedisplay();
+  }
+	case 'w':
+
+	break;
 	default:
 		// glutSetWindowTitle(key);
 		break;
 	}
-
+	///	mat4 projection1 = Perspective(camera_angle, aspect, zNear, zFar);
+	//	glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
+	//	glutPostRedisplay();
 }
 
 extern "C" void menustatus(int status, int x, int y) {
@@ -185,7 +240,37 @@ extern "C" void myMenu(int value)
 	glutPostRedisplay();
 }
 
+extern "C" void reshape(int width, int height)
+{
+  glViewport(0, 0, width, height);
 
+  GLfloat left = -2.0, right = 2.0;
+  GLfloat top = 2.0, bottom = -2.0;
+
+  // Use following for ortho projection
+  //  GLfloat zNear = -20.0, zFar = 20.0;
+
+  // Use following for perspective projection
+  zNear = 0.2;
+  zFar = 40.0;
+
+  aspect = GLfloat(width)/height;
+
+  if (aspect > 1.0) {
+    left *= aspect;
+    right *= aspect;
+  }
+  else {
+    top /= aspect;
+    bottom /= aspect;
+  }
+
+  //mat4 projection = Perspective(camera_angle, aspect, zNear, zFar);
+
+  // Can use either perspective or ortho projection.
+    mat4 projection = Ortho(left, right, bottom, top, zNear, zFar);
+  glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
+}
 // Create menu items
 void setupMenu() {
 	glutCreateMenu(myMenu);
@@ -204,6 +289,7 @@ int main(int argc, char** argv){
 
 	glutDisplayFunc(display);
 	glutMouseFunc(mouse);
+	glutReshapeFunc(reshape);
 	glutIdleFunc(spinCube);
 	glutKeyboardFunc(mykey);
 	setupMenu();
