@@ -6,7 +6,7 @@ typedef Angel::vec4  color4;
 
 Smtable::Smtable() {
 
-	theta[0] = 0.0;
+	theta[0] = 90.0;
 	theta[1] = 0.0;
 	theta[2] = 0.0;
 
@@ -65,8 +65,14 @@ Smtable::Smtable() {
 
 	FLleg = Translate(-width, height, 0);
 	RRleg = Translate(width, -height, 0);
-
+	special = false;
+ 
 	calcMatrices();
+}
+
+void Smtable::setLoc(vec3 i){
+	loc = i;
+	tloc = Translate(loc.x, loc.y, loc.z);
 }
 
 void Smtable::moveleg(int i) {
@@ -119,22 +125,22 @@ void Smtable::MyQuad(int a, int b, int c, int d) {
 	}
 
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[a];
+	points[i] = ctm * tloc* vertices[a];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[b];
+	points[i] = ctm * tloc* vertices[b];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[c];
+	points[i] = ctm * tloc* vertices[c];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[a];
+	points[i] = ctm * tloc* vertices[a];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[c];
+	points[i] = ctm * tloc* vertices[c];
 	i++;
 	quad_color[i] = ambient_color + diffuse_color + specular_color;
-	points[i] = ctm * vertices[d];
+	points[i] = ctm * tloc* vertices[d];
 	i++;
 	i %= 36;
 

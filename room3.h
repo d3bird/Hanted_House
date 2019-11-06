@@ -10,10 +10,10 @@
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
-class room2{
+class room3{
 public:
-    room2(/* args */);
-    ~room2();
+    room3(/* args */);
+    ~room3();
 
     void draw();
     void update();

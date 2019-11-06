@@ -20,7 +20,7 @@ table::table() {
 	light_specular = color4(1.0, 1.0, 1.0, 1.0);
 	viewer = vec4(0.0, 0.0, -1.0, 0.0);
 	spec = true;
-
+	special = false;
 	tscale = 0;
 	width = 315;//135
 	length = 5;//
@@ -59,6 +59,10 @@ table::table() {
 }
 
 
+void table::setLoc(vec3 i){
+	loc = i;
+	tloc = Translate(loc.x, loc.y, loc.z);
+}
 
 void table::MyQuad(int a, int b, int c, int d) {
 	static int i = 0;

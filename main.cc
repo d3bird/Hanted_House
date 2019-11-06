@@ -15,6 +15,7 @@
 #include "Small_table.h"
 #include "room1.h"
 #include "room2.h"
+#include "room3.h"
 
 const int NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 
@@ -44,6 +45,7 @@ chair* cc;
 Smtable* sm;
 room1* r1;
 room2* r2;
+room3* r3;
 GLuint program;
 
 int x =0;
@@ -162,7 +164,10 @@ extern "C" void display() {
 	}else{
 		r1->updatePlayerpos(cameraPos);
 		r1->draw();
+		r2->updatePlayerpos(cameraPos);
 		r2->draw();
+		r3->updatePlayerpos(cameraPos);
+		r3->draw();
 	}
 	glutSwapBuffers();
 }
@@ -182,15 +187,25 @@ void spinCube() {
 
 	static GLint time = glutGet(GLUT_ELAPSED_TIME);
 	GLint deltatime = (glutGet(GLUT_ELAPSED_TIME) - time);
-
+	
 	if (!game){
 		if (rotate) {
 			theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+
 			tt->updateAngle(theta);
 			cc->updateAngle(theta);
 			sm->updateAngle(theta);
 			if (theta[axis] > 360.0) theta[axis] -= 360.0;
 		}
+	}else{
+			theta[0] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+			//theta[1] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+			//theta[2] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+		r2->updateAngle(theta);
+		r2->update();
+		if (theta[0] > 360.0) theta[0] -= 360.0;
+		if (theta[1] > 360.0) theta[1] -= 360.0;
+		if (theta[2] > 360.0) theta[2] -= 360.0;
 	}
 
 	time = glutGet(GLUT_ELAPSED_TIME);
@@ -241,16 +256,37 @@ void spinCube() {
 		if( inroom1){
 			r1->updatePlayerpos(cameraPos);
 			if (r1->isCollission()){
-				std::cout<<"there was a wall collision"<<std::endl;
+				//std::cout<<"there was a wall collision"<<std::endl;
 				cameraPos = temp;
 				r1->updatePlayerpos(cameraPos);
 			}
 
 		} else if (inroom2){
-
+			r2->updatePlayerpos(cameraPos);
+			if (r2->isCollission()){
+				//std::cout<<"there was a wall collision"<<std::endl;
+				cameraPos = temp;
+				r2->updatePlayerpos(cameraPos);
+			}
 
 		}else if (inroom3){
-
+			r3->updatePlayerpos(cameraPos);
+			if (r3->isCollission()){
+				//std::cout<<"there was a wall collision"<<std::endl;
+				//cameraPos = temp;
+				//r3->updatePlayerpos(cameraPos);
+			}else{
+			r2->updatePlayerpos(cameraPos);
+			if (r2->isCollission()){
+				//std::cout<<"there was a wall collision"<<std::endl;
+				cameraPos = temp;
+				r2->updatePlayerpos(cameraPos);
+				r3->updatePlayerpos(cameraPos);
+			}else{
+				r2->updatePlayerpos(cameraPos);
+				r3->updatePlayerpos(cameraPos);
+			}
+			}
 		}else if (inroom4){
 
 		}else if (inroom5){
@@ -276,7 +312,13 @@ void spinCube() {
 			}
 
 		} else if (inroom2){
-
+				r2->updatePlayerpos(cameraPos);
+			if (r2->foundSpecial()){
+				std::cout<<"found the 2nd special object"<<std::endl;
+				inroom2 = false;
+				r2->openDoor();
+				inroom3 = true;
+			}
 
 		}else if (inroom3){
 
@@ -308,16 +350,6 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 	case 'r':
 		rotate = !rotate;
 		break;
-	case '+':
-		//cc->increaseScale();
-		moveamount *=2;
-		std::cout<<"move AMOUNT "<< moveamount <<std::endl;
-		break;
-	case '-':
-		moveamount /=2;
-		std::cout<<"move AMOUNT "<< moveamount <<std::endl;
-		//->decreaseScale();
-		break;
 
 	case 'w':
 		mforward = true;
@@ -347,30 +379,7 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 		interact = true;
 	break;
 
- case '>': {
-    camera_angle += 5.0;
-    if (camera_angle > 175.0) {
-      camera_angle = 175.0;
-    }
-    mat4 projection =Ortho(left, right, bottom, top, zNear, zFar);
 
-    glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
-    glutPostRedisplay();
-  }
-    break;
-  case '<':{
-    camera_angle -= 5.0;
-    if (camera_angle < 1.0) {
-      camera_angle = 1.0;
-    }
-
-
-
-
-    //mat4 projection1 = Ortho(left, right, bottom, top, zNear, zFar);;
-    //glUniformMatrix4fv(Projection, 1, GL_TRUE, projection1);
-    glutPostRedisplay();
-  }
 	default:
 		// glutSetWindowTitle(key);
 		break;
@@ -467,6 +476,7 @@ void myinit(){
 	sm = new Smtable();
 	r1 = new room1();
 	r2 = new room2();
+	r3 = new room3();
 }
 
 //float lastX = 450, lastY = 450;

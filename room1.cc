@@ -78,6 +78,32 @@ room1::room1(){
     ncc->setspecial(true);
     cc.push_back(ncc);
 
+    ilov = vec3(0,(height- height/3),1000); 
+    ncc = new chair();
+    chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
+    ncc->setLoc(chairloc);
+    ncc ->updateVeiwer(chairloc);
+    ncc ->updateLightPos(chairloc);
+    ncc->setspecial(false);
+    cc.push_back(ncc);
+
+    ilov = vec3(-1500,(height- height/3),1000); 
+    ncc = new chair();
+    chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
+    ncc->setLoc(chairloc);
+    ncc ->updateVeiwer(chairloc);
+    ncc ->updateLightPos(chairloc);
+    ncc->setspecial(false);
+    cc.push_back(ncc);
+
+    ilov = vec3(0,(height- height/3),-2000); 
+    ncc = new chair();
+    chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
+    ncc->setLoc(chairloc);
+    ncc ->updateVeiwer(chairloc);
+    ncc ->updateLightPos(chairloc);
+    ncc->setspecial(false);
+    cc.push_back(ncc);
 
     determinLighting();
 }
@@ -102,9 +128,9 @@ room1::~room1(){
 }
 
 bool room1::foundSpecial(){
-     if ((player.x* 1000 >= 0 && player.x* 1000 <= 1000 ) &&
-        (player.y* 1000 >= -2000 && player.y* 1000 <= -1500 ) &&
-        (player.z* 1000 >= 400 && player.z* 1000 <= 700 )
+     if ((player.x* 1000 >= 0 && player.x* 1000 <= 1650 ) &&
+        (player.y* 1000 >= -2000 && player.y* 1000 <= -1250 ) &&
+        (player.z* 1000 >= -115.328 && player.z* 1000 <= 800 )
         )
      {
         return true;

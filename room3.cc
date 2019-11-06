@@ -1,8 +1,8 @@
-#include "room2.h"
+#include "room3.h"
 
 
 
-room2::room2(){
+room3::room3(){
     //intalising data for the floor
     material_ambient = color4(1.0, 0.0, 1.0, 1.0);
 	material_diffuse = color4(1.0, 0.8, 0.0, 1.0);
@@ -33,7 +33,7 @@ room2::room2(){
 	Fvertices[6] = point4(width, (height), -length, 1.0);
 	Fvertices[7] = point4(width, -(height), -length, 1.0);
 
-	loc.x = 0;
+	loc.x = 8000;
 	 loc.y= 0;
 	 loc.z = 8000;
 
@@ -46,8 +46,8 @@ room2::room2(){
     Cloc.y =0;
     Cloc.z = -Floc.z;
     CTloc = Translate(Cloc.x + loc.z, Cloc.y + loc.x, Cloc.z+ loc.y);// get the transformation for the floor
-    florC = color4(1.0,0.0,1.0,1.0);
-    ceilC = color4(0.0,0.0,1.0,1.0);
+    ceilC = color4(1.0,0.0,1.0,1.0);
+    florC = color4(0.0,0.0,1.0,1.0);
 
     W1loc.x = 0;
     W1loc.y = 0;
@@ -85,142 +85,16 @@ room2::room2(){
     ncc->setspecial(false);
     cc.push_back(ncc);
 
-   ilov.x += 500;
-   ilov.y -= 500;
-   ilov.z += 500;
-    ncc = new chair();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
-    ncc->setLoc(chairloc);
-    ncc ->updateVeiwer(chairloc);
-    ncc ->updateLightPos(chairloc);
-    ncc->setColor(color4(0.0,1.0,0.0,1.0));
-    ncc->setspecial(false);
-    cc.push_back(ncc);
-
-	ilov.x -= 500;
-
-   ntt = new table();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ntt->getHeight());// tempplate for drawing a table
-    //ntt->setLoc(chairloc);
-    ntt ->updateVeiwer(chairloc);
-    ntt ->updateLightPos(chairloc);
-    ntt->setColor(color4(0.0,1.0,0.0,1.0));
-    ntt->setspecial(true);
-    tt.push_back(ntt);
-
-    //ilov = vec3(0 ,0,0); 
-    nsm = new Smtable();
-     //chairloc = vec3(ilov.x, ilov.z ,ilov.y - nsm->getHeight());// tempplate for drawing a table
-    nsm->setLoc(chairloc);
-    nsm ->updateVeiwer(chairloc);
-    nsm ->updateLightPos(chairloc);
-    nsm->setColor(color4(0.0,1.0,0.0,1.0));
-    nsm->setspecial(false);
-    sm.push_back(nsm);
-
-   ilov.x += 100;
-   ilov.y -= 500;
-   ilov.z += 900;
-
-   nsm = new Smtable();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - nsm->getHeight());// tempplate for drawing a table
-    nsm->setLoc(chairloc);
-    nsm ->updateVeiwer(chairloc);
-    nsm ->updateLightPos(chairloc);
-    nsm->setColor(color4(0.0,1.0,0.0,1.0));
-    nsm->setspecial(true);
-    sm.push_back(nsm);
-
-       ilov.x += 100;
-   ilov.y -= 500;
-   ilov.z += 900;
-
-   nsm = new Smtable();
-     chairloc = vec3(ilov.x- 200, ilov.z+ 300 ,ilov.y - nsm->getHeight()+ 800);// tempplate for drawing a table
-    nsm->setLoc(chairloc);
-    nsm ->updateVeiwer(chairloc);
-    nsm ->updateLightPos(chairloc);
-    nsm->setColor(color4(0.0,1.0,0.0,1.0));
-    nsm->setspecial(false);
-    sm.push_back(nsm);
-
-  ilov.x += 100;
-   ilov.y -= 500;
-   ilov.z += 900;
-
-   nsm = new Smtable();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - nsm->getHeight());// tempplate for drawing a table
-    nsm->setLoc(chairloc);
-    nsm ->updateVeiwer(chairloc);
-    nsm ->updateLightPos(chairloc);
-    nsm->setColor(color4(0.0,1.0,0.0,1.0));
-    nsm->setspecial(false);
-    sm.push_back(nsm);
-
-       ilov = vec3(500 + loc.z ,(height- height/3)+ loc.y,+ loc.x); 
-
-	ilov.x += 100;
-   	//ilov.y += 500;
-   	ilov.z += 900;
-
-    ncc = new chair();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
-    ncc->setLoc(chairloc);
-    ncc ->updateVeiwer(chairloc);
-    ncc ->updateLightPos(chairloc);
-    ncc->setColor(color4(0.0,1.0,0.0,1.0));
-    ncc->setspecial(false);
-    cc.push_back(ncc);
-
-	//ilov.x += 100;
-   	//ilov.y += 500;
-   	ilov.z -= 900;
-
-    ncc = new chair();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
-    ncc->setLoc(chairloc);
-    ncc ->updateVeiwer(chairloc);
-    ncc ->updateLightPos(chairloc);
-    ncc->setColor(color4(0.0,1.0,0.0,1.0));
-    ncc->setspecial(false);
-    cc.push_back(ncc);
-
-    
-	ilov.x += 500;
-   	//ilov.y += 500;
-   	ilov.z -= 900;
-
-    ncc = new chair();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
-    ncc->setLoc(chairloc);
-    ncc ->updateVeiwer(chairloc);
-    ncc ->updateLightPos(chairloc);
-    ncc->setColor(color4(0.0,1.0,0.0,1.0));
-    ncc->setspecial(false);
-    cc.push_back(ncc);     	
-
-    
-	ilov.x -= 1400;
-   	ilov.y -= 600;
-   	ilov.z -= 450;
-
-    ncc = new chair();
-     chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
-    ncc->setLoc(chairloc);
-    ncc ->updateVeiwer(chairloc);
-    ncc ->updateLightPos(chairloc);
-    ncc->setColor(color4(0.0,1.0,0.0,1.0));
-    ncc->setspecial(false);
-    cc.push_back(ncc);     	     	
+	     	
     determinLighting();
 }
 
-bool room2::isCollission(){
-     if(player.x* 1000 >= 10784.3 || player.x* 1000 <= -3614.87 ){
+bool room3::isCollission(){
+     if(player.x* 1000 >= 4511.98 || player.x* 1000 <= 11110.5 ){
          return true;
      }else if (player.y* 1000 >= 2000 || player.y* 1000 <= -2000 ){
          return true;
-     }else if (player.z* 1000 >= 3200 || player.z* 1000 <= -3200 ){
+     }else if (player.z* 1000 >= -2574.54 || player.z* 1000 <= -10115.1 ){
             return true;
      }else{
          return false;
@@ -228,7 +102,7 @@ bool room2::isCollission(){
 
 }
 
-bool room2::foundSpecial(){
+bool room3::foundSpecial(){
      if ((player.x* 1000 >= 8000 && player.x* 1000 <= 10000 ) &&
         (player.y* 1000 >= -2000 && player.y* 1000 <= -800 ) &&
         (player.z* 1000 >= 1000 && player.z* 1000 <= 2200 )
@@ -241,12 +115,12 @@ bool room2::foundSpecial(){
 }
 
 
-room2::~room2(){
+room3::~room3(){
 
 
 }
 
-void room2::MyQuad(int a, int b, int c, int d) {
+void room3::MyQuad(int a, int b, int c, int d) {
 	static int i = 0;
     float Stheta[3] = {0,90,0}; //side walls
     float theta[3] = {270,0,0}; //floor walls
@@ -377,7 +251,7 @@ void room2::MyQuad(int a, int b, int c, int d) {
 }
 
 
-void room2::determinLighting(){
+void room3::determinLighting(){
 
   MyQuad(1,0,3,2);
   MyQuad(2,3,7,6);
@@ -387,14 +261,14 @@ void room2::determinLighting(){
   MyQuad(5,4,0,1);
 }
 
-void room2::updateLightpos(point4 i){
+void room3::updateLightpos(point4 i){
 
 
 }
 
 
 
-void room2::draw(){
+void room3::draw(){
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), Fpoints);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), Fquad_color);
@@ -407,19 +281,19 @@ void room2::draw(){
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W1points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W1quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 1
-/*
+
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W2points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W2quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 2
-*/
+/*
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W3points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W3quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 3
-if(!open){
+*/
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W4points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W4quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 4
-}
+
 	for (int i =0 ; i < cc.size(); i++){
 		if(cc[i]->isspecial()){
 			// std::cout<<"special"<<std::endl;
@@ -450,16 +324,10 @@ if(!open){
 	}	
 
 }
-void room2::update(){
+void room3::update(){
 	for (int i =0 ; i < 2; i++){
-		if(i ==0){
-	  		cc[i] ->updateAngle(theta);
-		}else{
-			theta[0] = -theta[0];
-			theta[1] = -theta[1];
-			theta[2] = -theta[2];
-			cc[i] ->updateAngle(theta);
-		}
+	  cc[i] ->updateAngle(theta);
+	
 	}
 }
 
