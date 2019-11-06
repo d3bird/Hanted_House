@@ -135,10 +135,15 @@ extern "C" void display() {
 	glutSwapBuffers();
 }
 
-extern "C" void mouse(int btn, int state, int x, int y) {
+//mouse vars
+
+
+extern "C" void mouse(int btn, int state, int xpos, int ypos) {
 	if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
 	if (btn == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
 	if (btn == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
+
+
 }
 
 void spinCube() {
@@ -327,7 +332,7 @@ extern "C" void reshape(int width, int height){
     bottom /= aspect;
   }
 
-mat4 projection = Perspective(camera_angle, aspect, zNear, zFar);
+	mat4 projection = Perspective(camera_angle, aspect, zNear, zFar);
 
   // Can use either perspective or ortho projection.
    // mat4 projection = Ortho(left, right, bottom, top, zNear, zFar);
@@ -350,23 +355,71 @@ void myinit(){
 
 }
 
+//float lastX = 450, lastY = 450;
+bool firstMouse = true;
+float yaw   =  -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch =  0.0f;
+float lastX =  450.0f;
+float lastY =  450;
+float fov   =  45.0f;
+
+
+extern "C" void motion(int xpos, int ypos)
+{
+ 
+	//std::cout<<"mopuse is moving:"<<xpos<<" "<<ypos<<std::endl;
+	//std::cout<<"check"<<std::endl;
+    if(firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+  
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; 
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.005;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw   += xoffset;
+    pitch += yoffset;
+
+    if(pitch > 89.0f)
+        pitch = 89.0f;
+    if(pitch < -89.0f)
+        pitch = -89.0f;
+
+    vec3 front;
+    front.x = cos(DegreesToRadians*yaw) * cos(DegreesToRadians*pitch);
+    front.y = sin(DegreesToRadians*pitch);
+    front.z = sin(DegreesToRadians*yaw) * cos(DegreesToRadians*pitch);
+    cameraFront = normalize(front);
+		//glutWarpPointer(450,450); 
+  glutPostRedisplay();
+}
+
 int main(int argc, char** argv){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(900, 900);
 	glutCreateWindow("object viewer");
-
+	//SetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
 	glutDisplayFunc(display);
 	glutMouseFunc(mouse);
 	glutReshapeFunc(reshape);
 	glutIdleFunc(spinCube);
 	glutKeyboardFunc(mykey);
+	 glutPassiveMotionFunc (motion);
 	setupMenu();
 	glutMenuStatusFunc(menustatus);
 
 	glewInit();
-
+	glutWarpPointer(450,450); 
 	init();
 	myinit();
 	glEnable(GL_DEPTH_TEST);
