@@ -36,6 +36,8 @@ public:
 	void ShaderModelVeiw(GLuint  m){ModelView =m;}
 	void updateModelVeiwTop();
 	void updateModelVeiwLeg();
+
+	void updateLightPos(point4 i) {light_position = i;}
 private:
 
 	vec4 product(vec4 a, vec4 b) {
@@ -56,11 +58,12 @@ private:
 	color4 light_diffuse;
 	color4 light_specular;
 
-	float theta[3];
+	
 
 	point4 points[NumVertices];
 	color4 quad_color[NumVertices];
-
+	
+float theta[3];
 	point4 points2[NumVertices];
 	color4 quad_color2[NumVertices];
 

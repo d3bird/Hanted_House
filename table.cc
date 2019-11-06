@@ -262,18 +262,7 @@ void table::draw() {
 	ctm = RotateX(theta[0]) * RotateY(theta[1]) * RotateZ(theta[2]);
 	calcMatrices();
 	colorcube();
-	// Dpoints = points;// get the 
-	// Dpoints2 =points2;
-	/*for(int i =0; i < NumVertices;i++){
-	 Dpoints[i].x = Dpoints[i].x *(1.0/1000.0);
-	Dpoints[i].y = Dpoints[i].y *(1.0/1000.0);
-	Dpoints[i].z = Dpoints[i].z *(1.0/1000.0);
-	 Dpoints[i].w  =0;
-	Dpoints2[i].x = Dpoints2[i].x *(1.0/1000.0);
-	Dpoints2[i].y = Dpoints2[i].y *(1.0/1000.0);
-	Dpoints2[i].z = Dpoints2[i].z *(1.0/1000.0);
-	Dpoints2[i].w  =0;
-	}*/
+
 	glUniformMatrix4fv(ModelView, 1, GL_TRUE, model_veiw_top);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(quad_color), quad_color);

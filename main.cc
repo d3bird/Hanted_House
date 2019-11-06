@@ -13,6 +13,7 @@
 #include "table.h"
 #include "chair.h"
 #include "Small_table.h"
+#include "room1.h"
 
 const int NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 
@@ -34,9 +35,13 @@ bool rotate = true;
 bool Dtable = true;
 bool Dchair = false;
 bool smallTable = false;
+
+bool game = true;
+//pointers for objects to draw
 table* tt;
 chair* cc;
 Smtable* sm;
+room1* r1;
 GLuint program;
 
 int x =0;
@@ -79,6 +84,10 @@ mat4 view = LookAt(vec3(0.0f, 0.0f, 3.0f),
 //vec3 cameraPos   = vec3(0.0f, 0.0f,  3.0f);
 vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 //vec3 cameraUp    = vec3(0.0f, 1.0f,  0.0f);
+
+//window vars
+int Wheight =900;
+int Wwidth = 900;
 
 //booleans for movments
 bool mforward = false;
@@ -123,14 +132,20 @@ void init() {
 extern "C" void display() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear the window
-	if (Dtable) {
-		tt->draw();
-	}
-	if (Dchair) {
-		cc->draw();
-	}
-	if (smallTable) {
-		sm->draw();
+	if (!game){
+		if (Dtable) {
+			//tt->updateLightPos(point4(cameraPos.x,cameraPos.y, cameraPos.z ,0.0));
+			tt->draw();
+		}
+		if (Dchair) {
+			cc->draw();
+		}
+		if (smallTable) {
+			sm->draw();
+		}
+	}else{
+		r1->draw();
+
 	}
 	glutSwapBuffers();
 }
@@ -150,15 +165,19 @@ void spinCube() {
 
 	static GLint time = glutGet(GLUT_ELAPSED_TIME);
 	GLint deltatime = (glutGet(GLUT_ELAPSED_TIME) - time);
-	theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
-	if (rotate) {
-		tt->updateAngle(theta);
-		cc->updateAngle(theta);
-		sm->updateAngle(theta);
+
+	if (!game){
+		if (rotate) {
+			theta[axis] += incr * (glutGet(GLUT_ELAPSED_TIME) - time);
+			tt->updateAngle(theta);
+			cc->updateAngle(theta);
+			sm->updateAngle(theta);
+			if (theta[axis] > 360.0) theta[axis] -= 360.0;
+		}
 	}
+
 	time = glutGet(GLUT_ELAPSED_TIME);
 
-	if (theta[axis] > 360.0) theta[axis] -= 360.0;
 
 	point4 eye2(1000, 10000, -10, 1.0);
 	point4 at2(-0, -0,-0, 1.0);
@@ -285,19 +304,22 @@ extern "C" void myMenu(int value){
 		Dtable = true;
 		Dchair = false;
 		smallTable = false;
+		game = false;
 		break;
 	case 1:
 		Dchair = true;
 		Dtable = false;
 		smallTable = false;
+		game = false;
 		break;
 	case 3:
 		Dchair = false;
 		Dtable = false;
 		smallTable = true;
+		game = false;
 		break;
 	case 4:
-
+		game = true;
 		break;
 	case 5:
 
@@ -311,9 +333,12 @@ extern "C" void myMenu(int value){
 extern "C" void reshape(int width, int height){
   glViewport(0, 0, width, height);
 
+	Wheight = width;
+	Wheight = height;
+
   GLfloat left = -2.0, right = 2.0;
   GLfloat top = 2.0, bottom = -2.0;
-
+ 
   // Use following for ortho projection
   //  GLfloat zNear = -20.0, zFar = 20.0;
 
@@ -344,6 +369,7 @@ void setupMenu() {
 	glutAddMenuEntry("draw table", 0);
 	glutAddMenuEntry("draw chair", 1);
 	glutAddMenuEntry("draw small table", 3);
+	glutAddMenuEntry("game", 4);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -352,7 +378,7 @@ void myinit(){
 	tt-> ShaderModelVeiw(Modeltrans);
 	cc = new chair();
 	sm = new Smtable();
-
+	r1 = new room1();
 }
 
 //float lastX = 450, lastY = 450;
@@ -399,6 +425,17 @@ extern "C" void motion(int xpos, int ypos)
     front.z = sin(DegreesToRadians*yaw) * cos(DegreesToRadians*pitch);
     cameraFront = normalize(front);
 		//glutWarpPointer(450,450); 
+
+	    if ( xpos < 50 || xpos > Wwidth - 50 ) {  //you can use values other than 100 for the screen edges if you like, kind of seems to depend on your mouse sensitivity for what ends up working best
+        lastX = Wwidth/2;   //centers the last known position, this way there isn't an odd jump with your cam as it resets
+        lastY = Wheight/2;   
+        glutWarpPointer(Wwidth/2, Wheight/2);  //centers the cursor
+    } else if (ypos < 50 || ypos > Wheight - 50) {
+        lastX = Wwidth/2;
+        lastY = Wheight/2;
+        glutWarpPointer(Wwidth/2, Wheight/2);
+    } 
+
   glutPostRedisplay();
 }
 
