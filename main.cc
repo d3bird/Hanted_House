@@ -96,7 +96,8 @@ bool mforward = false;
 bool mleft = false;
 bool mright = false;
 bool mbackward = false;
-
+bool mup = false;
+bool mdown = false;
 void init() {
 
 	// Create a vertex array object
@@ -187,7 +188,7 @@ void spinCube() {
   //std::cout<<model_view<<std::endl;
 
 	// deal with movement
-	float cameraSpeed = 0.7f;
+	float cameraSpeed = 0.1f;
 	//std::cout<<cameraSpeed<<std::endl;
 	if(mforward){
 		cameraPos += cameraSpeed * cameraFront;
@@ -205,7 +206,14 @@ void spinCube() {
 		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 	mright= false;
 	}
-
+	if(mup){
+		cameraPos.y += cameraSpeed;
+		mup = false;
+	}
+	if(mdown){
+		cameraPos.y -= cameraSpeed;
+		mdown = false;
+	}
   mat4 view = LookAt(cameraPos, cameraPos + cameraFront, cameraUp);
   glUniformMatrix4fv(Modelview, 1, GL_TRUE, ( view));
 
@@ -250,17 +258,14 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 	mright = true;
 		//cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 		break;
+	case ' ':
+	mup = true;
+	break;
 
+	case 'e':
+	mdown = true;
+	break;
 
-	case 'z':
-		y = 1;
-		break;
-	case 'x':
-		cc->moveleg(1);
-		break;
-	case 'c':
-		cc->moveleg(2);
-		break;
 
  case '>': {
     camera_angle += 5.0;
