@@ -5,6 +5,18 @@
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
+//******************************************************************
+//                                                                  
+//  Class: table
+//                                                                  
+//  Purpose:  holds the information to draw a large table at a given point 
+//				This table is also a differnt style then the small table
+//            
+//  Functions:
+//             draw()               //draws the room and its objects
+//             update()             //updated the objects
+//             misc update funtions // other functions to change other parts of the object
+//******************************************************************
 
 class table {
 public:

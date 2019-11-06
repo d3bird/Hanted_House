@@ -10,6 +10,21 @@
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
+
+//******************************************************************
+//                                                                  
+//  Class: room1
+//                                                                  
+//  Purpose:  hold the information to generate the first room and 
+//            the differnt objects that it contains
+//            
+//  Functions:
+//             draw()               //draws the room and its objects
+//             update()             //updated the objects in the room
+//             isCollission()       // determin if the player is out of bounds
+//             foundSpecial()       // determin if the interaction hit a special object
+//******************************************************************
+
 class room1{
 public:
     room1(/* args */);

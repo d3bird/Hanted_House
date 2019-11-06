@@ -5,6 +5,17 @@
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
 
+//******************************************************************
+//                                                                  
+//  Class: chair
+//                                                                  
+//  Purpose:  holds the information to draw a chair at a given point 
+//            
+//  Functions:
+//             draw()               //draws the room and its objects
+//             update()             //updated the objects
+//             misc update funtions // other functions to change other parts of the object
+//******************************************************************
 
 class chair {
 public:

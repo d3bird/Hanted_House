@@ -1,13 +1,15 @@
-// Modified by David M. Chelberg for style
-// last-modified: Mon Nov  7 11:39:05 2016
-//
-// rotating cube with lighting
-
-// Comments in this version poor, also many places have poor style
-// coding.  -- DMC
-// Added some more comments -- DMC
-
-// shades computed at vertices in application
+//******************************************************************* 
+//                                                                    
+//  Program:     Haunted house                                            
+//                                                                     
+//  Author:      Scott Craford
+//  Email:       sc573016@ohio.edu
+//                                                                    
+//                                                                    
+//  Description: multiple rooms that the user has to find the special object                  
+//               to open the door for the next room                                                     	
+//                                                                    
+//*******************************************************************
 
 #include "Angel.h"
 #include "table.h"

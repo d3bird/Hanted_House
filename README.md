@@ -53,3 +53,6 @@ I am really proud of how the models for the different furniture turned out.
 There is dynamic lighting on the different piece of furniture based on how far away 
 they are from the player. The close the player gets the darker the will become unless it 
 the special one that unlocks the next room.
+
+-dynamic resizing-
+The window can be resized to any dimentions and it will still work fine
