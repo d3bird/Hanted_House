@@ -381,7 +381,7 @@ extern "C" void motion(int xpos, int ypos)
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.005;
+    float sensitivity = 0.05;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
