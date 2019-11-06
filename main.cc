@@ -14,6 +14,7 @@
 #include "chair.h"
 #include "Small_table.h"
 #include "room1.h"
+#include "room2.h"
 
 const int NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 
@@ -42,6 +43,7 @@ table* tt;
 chair* cc;
 Smtable* sm;
 room1* r1;
+room2* r2;
 GLuint program;
 
 int x =0;
@@ -145,7 +147,7 @@ extern "C" void display() {
 		}
 	}else{
 		r1->draw();
-
+		r2->draw();
 	}
 	glutSwapBuffers();
 }
@@ -185,7 +187,7 @@ void spinCube() {
   //std::cout<<model_view<<std::endl;
 
 	// deal with movement
-	float cameraSpeed = 0.1f;
+	float cameraSpeed = 0.7f;
 	//std::cout<<cameraSpeed<<std::endl;
 	if(mforward){
 		cameraPos += cameraSpeed * cameraFront;
@@ -379,6 +381,7 @@ void myinit(){
 	cc = new chair();
 	sm = new Smtable();
 	r1 = new room1();
+	r2 = new room2();
 }
 
 //float lastX = 450, lastY = 450;
