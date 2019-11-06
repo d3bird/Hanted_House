@@ -38,14 +38,23 @@ public:
 
 
 	void calTranMat();
+	void setLoc(vec3 i);
 
+	int getHeight(){return Tlength + length;}
+
+	void updateVeiwer(vec4 i){ viewer =i;}
+	void updateLightPos(point4 i){light_position = i;}
+	bool isspecial(){return special;}
+	void setspecial(bool i){special =i;}
+
+	void setColor(color4 i){material_diffuse =i;}
 private:
 
 	vec4 product(vec4 a, vec4 b) {
 		return vec4(a[0] * b[0], a[1] * b[1], a[2] * b[2], a[3] * b[3]);
 	}
 
-
+	bool special;
 	const static int NumVertices = 36;// was 36
 	point4  vertices[8];// was 8
 	point4  vertices2[8];// was 8
@@ -78,7 +87,7 @@ private:
 
 
 
-	vec4 loc;
+	vec3 loc;
 
 	vec4 viewer;
 

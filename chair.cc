@@ -6,15 +6,15 @@ typedef Angel::vec4  color4;
 
 chair::chair() {
 
-	theta[0] = 0.0;
+	theta[0] = 90.0;
 	theta[1] = 0.0;
 	theta[2] = 0.0;
 
 	material_ambient = color4(1.0, 0.0, 1.0, 1.0);
-	material_diffuse = color4(1.0, 0.8, 0.0, 1.0);
+	material_diffuse = color4(0.0, 0.8, 1.0, 1.0); // color of the chair
 	material_specular = color4(1.0, 0.8, 0.0, 1.0);
 	material_shininess = 100.0;
-	light_position = point4(0.0, 0.0, -1.0, 0.0);
+	light_position = point4(0.0, 200.0, 1.0, 0.0);
 	light_ambient = color4(0.2, 0.2, 0.2, 1.0);
 	light_diffuse = color4(1.0, 1.0, 1.0, 1.0);
 	light_specular = color4(1.0, 1.0, 1.0, 1.0);
@@ -42,6 +42,7 @@ chair::chair() {
 	loc.y = 1;
 	loc.z = 1;
 
+	special = false;
 
 	// table stats
 	vertices[0] = point4(-width, -(height), length, 1.0);
@@ -94,6 +95,10 @@ chair::chair() {
 
 }
 
+void chair::setLoc(vec3 i){
+	loc = i;
+	tloc = Translate(loc.x, loc.y, loc.z);
+}
 void chair::moveleg(int i) {
 
 	switch (i) {

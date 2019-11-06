@@ -1,7 +1,11 @@
 #pragma once
 
 #include "Angel.h"
-
+#include <vector>
+#include <iostream>
+#include "chair.h"
+#include "table.h"
+#include  "Small_table.h"
 
 typedef Angel::vec4  point4;
 typedef Angel::vec4  color4;
@@ -17,15 +21,25 @@ public:
     void determinLighting();
 
     void updateLightpos(point4 i);
+
+    void updatePlayerpos(vec3 i){player = i;}
+
+    bool isCollission();
+
+    bool foundSpecial();
+    void openDoor(){open = true;}
+    bool isopen(){return open;}
 private:
     void MyQuad(int a, int b, int c, int d); 
     bool spec;
+    bool open;
 	vec4 product(vec4 a, vec4 b) {
 		return vec4(a[0] * b[0], a[1] * b[1], a[2] * b[2], a[3] * b[3]);
 	}
     // misc values need for the walls
         vec4 Fviewer;
         const static int NumVertices = 36;
+        vec3 player;
     //wall
 
    //floor 
@@ -76,5 +90,6 @@ private:
     vec3 W4loc;
     mat4 W4Tloc;
     //objects in the room
-
+    chair* ncc;
+    std::vector<chair*> cc; 
 };

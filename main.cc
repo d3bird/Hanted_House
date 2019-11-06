@@ -98,6 +98,19 @@ bool mright = false;
 bool mbackward = false;
 bool mup = false;
 bool mdown = false;
+
+//bools for interaction
+bool interact = false;
+
+bool inroom1 = true;
+bool inroom2 = false;
+bool inroom3 = false;
+bool inroom4 = false;
+bool inroom5 = false;
+bool inroom6 = false;
+
+int openwalls =0;
+
 void init() {
 
 	// Create a vertex array object
@@ -147,6 +160,7 @@ extern "C" void display() {
 			sm->draw();
 		}
 	}else{
+		r1->updatePlayerpos(cameraPos);
 		r1->draw();
 		r2->draw();
 	}
@@ -190,30 +204,93 @@ void spinCube() {
 	// deal with movement
 	float cameraSpeed = 0.1f;
 	//std::cout<<cameraSpeed<<std::endl;
+	bool movement = false;
+	vec3 temp = cameraPos;
 	if(mforward){
 		cameraPos += cameraSpeed * cameraFront;
 		mforward = false;
+		movement = true;
 	}
 	if (mbackward){
 		cameraPos -= cameraSpeed * cameraFront;
 		mbackward= false;
+		movement = true;
 	}
 	if(mleft){
 		cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 		mleft= false;
+		movement = true;
 	}
 	if(mright){
 		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 	mright= false;
+	movement = true;
 	}
 	if(mup){
 		cameraPos.y += cameraSpeed;
 		mup = false;
+		movement = true;
 	}
 	if(mdown){
 		cameraPos.y -= cameraSpeed;
 		mdown = false;
+		movement = true;
 	}
+	// check for collision
+	if(movement){
+		if( inroom1){
+			r1->updatePlayerpos(cameraPos);
+			if (r1->isCollission()){
+				std::cout<<"there was a wall collision"<<std::endl;
+				cameraPos = temp;
+				r1->updatePlayerpos(cameraPos);
+			}
+
+		} else if (inroom2){
+
+
+		}else if (inroom3){
+
+		}else if (inroom4){
+
+		}else if (inroom5){
+
+		}else if (inroom6){
+
+		}
+
+	}
+
+	if(interact){
+		std::cout<<"interaction at "<<cameraPos.x * 1000 << " "<<cameraPos.y * 1000<< " "<< cameraPos.z * 1000<< std::endl;
+		
+		interact = false;
+
+		if( inroom1){
+			r1->updatePlayerpos(cameraPos);
+			if (r1->foundSpecial()){
+				std::cout<<"found the special object"<<std::endl;
+				inroom1 = false;
+				r1->openDoor();
+				inroom2 = true;
+			}
+
+		} else if (inroom2){
+
+
+		}else if (inroom3){
+
+		}else if (inroom4){
+
+		}else if (inroom5){
+
+		}else if (inroom6){
+
+		}
+
+
+	}
+
   mat4 view = LookAt(cameraPos, cameraPos + cameraFront, cameraUp);
   glUniformMatrix4fv(Modelview, 1, GL_TRUE, ( view));
 
@@ -266,6 +343,9 @@ extern "C" void mykey(unsigned char key, int mousex, int mousey) {
 	mdown = true;
 	break;
 
+	case 'f':
+		interact = true;
+	break;
 
  case '>': {
     camera_angle += 5.0;

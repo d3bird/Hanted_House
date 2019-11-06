@@ -69,12 +69,48 @@ room1::room1(){
     W4Tloc = Translate(W4loc.x, W4loc.y, W4loc.z);
     wall4C = color4(1.0,1.0,0.5,1.0);
 
+    vec3 ilov = vec3(1000,(height- height/3),0); 
+    ncc = new chair();
+    vec3 chairloc = vec3(ilov.x, ilov.z ,ilov.y - ncc->getHeight());// tempplate for drawing a table
+    ncc->setLoc(chairloc);
+    ncc ->updateVeiwer(chairloc);
+    ncc ->updateLightPos(chairloc);
+    ncc->setspecial(true);
+    cc.push_back(ncc);
+
+
     determinLighting();
 }
 
 room1::~room1(){
 
 
+}
+
+ bool room1::isCollission(){
+
+     if(player.x* 1000 >= 3600 || player.x* 1000 <= -3600 ){
+         return true;
+     }else if (player.y* 1000 >= 2000 || player.y* 1000 <= -2000 ){
+         return true;
+     }else if (player.z* 1000 >= 3200 || player.z* 1000 <= -3200 ){
+            return true;
+     }else{
+         return false;
+     }
+
+}
+
+bool room1::foundSpecial(){
+     if ((player.x* 1000 >= 0 && player.x* 1000 <= 1000 ) &&
+        (player.y* 1000 >= -2000 && player.y* 1000 <= -1500 ) &&
+        (player.z* 1000 >= 400 && player.z* 1000 <= 700 )
+        )
+     {
+        return true;
+     }
+
+    return false;
 }
 
 void room1::MyQuad(int a, int b, int c, int d) {
@@ -234,11 +270,11 @@ void room1::draw(){
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), Cpoints);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), Cquad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); // the cieling
-
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W1points);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W1quad_color);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 1
-
+    if(!open){
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W1points);
+        glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W1quad_color);
+        glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 1
+    }
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W2points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W2quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 2
@@ -250,6 +286,20 @@ void room1::draw(){
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Fpoints), W4points);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Fpoints), sizeof(Fquad_color), W4quad_color);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices); //  wall 4
+    //draw the chairs
+    for (int i =0 ; i < cc.size(); i++){
+        if(cc[i]->isspecial()){
+           // std::cout<<"special"<<std::endl;
+           // cc[i] ->updateLightPos(player);
+           // cc[i] ->updateVeiwer(player);
+            cc[i] ->draw();
+        }else{
+            cc[i] ->updateLightPos(player);
+            //cc[i] ->updateVeiwer(player);
+            cc[i] ->draw();
+        }
+    }
+
 }
 void room1::update(){
 
